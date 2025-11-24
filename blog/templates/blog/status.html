@@ -1,10 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %} Status de Equipo {%endblock%}
+
+{%block content%}
+
+<h2 class="mb-4">🧪 Status Actual de Equipos</h2>
+
+<div class="card shadow p-4">
+
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Ubicación</th>
+                <th>Número de Equipo</th>
+                <th>Línea</th>
+                <th>Tipo</th>
+                <th>Tipo de Carga</th>
+                <th>Días en Depósito</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for equipo in equipo_list %}
+            <tr>
+                <td>
+                    <strong>{{ forloop.counter }}</strong>
+                </td>
+
+                <td>{{ equipo.get_locate_display }}</td>
+
+                <td>{{ equipo.nro_team }}</td>
+                <td>{{ equipo.line }}</td>
+                <td>{{ equipo.type }}</td>
+                <td>{{ equipo.type_load }}</td>
+
+                <td>
+                    {% if equipo.deposit_days > 7 %}
+                        <span class="badge bg-danger text-white">{{ equipo.deposit_days }}</span>
+                    {% elif equipo.deposit_days > 3 %}
+                        <span class="badge bg-warning text-dark">{{ equipo.deposit_days }}</span>
+                    {% else %}
+                        <span class="badge bg-success">{{ equipo.deposit_days }}</span>
+                    {% endif %}
+                </td>
+
+                {# Aplicamos estilos condicionales a la columna 'Status' #}
+                <td>
+                    {% if "Avance" in equipo.status %}
+                        <span class="badge bg-info text-dark">{{ equipo.status }}</span>
+                    {% elif "Enjuagar" in equipo.status or "lavado" in equipo.status %}
+                        <span class="badge bg-primary">{{ equipo.status }}</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ equipo.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{%endblock%}
